@@ -1,5 +1,11 @@
 # Automation Framework
 
+[![CI - Automation Tests](https://github.com/enokjanuario/automation-framework-ntt/actions/workflows/ci.yml/badge.svg)](https://github.com/enokjanuario/automation-framework-ntt/actions/workflows/ci.yml)
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
+[![Maven](https://img.shields.io/badge/Maven-3.8+-blue.svg)](https://maven.apache.org/)
+[![Selenium](https://img.shields.io/badge/Selenium-4.18.1-green.svg)](https://www.selenium.dev/)
+[![RestAssured](https://img.shields.io/badge/RestAssured-5.4.0-brightgreen.svg)](https://rest-assured.io/)
+
 Framework de automacao de testes profissional para APIs REST e aplicacoes Web, desenvolvido com Java, RestAssured e Selenium WebDriver.
 
 ## Indice
