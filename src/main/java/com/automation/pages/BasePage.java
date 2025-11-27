@@ -250,14 +250,19 @@ public abstract class BasePage {
             for (String selector : closeSelectors) {
                 try {
                     By locator = By.cssSelector(selector);
-                    if (isPresent(locator) && isVisible(locator)) {
+                    // isVisible ja verifica existencia e visibilidade
+                    if (isVisible(locator)) {
                         click(locator);
                         logger.debug("Fechado popup/overlay usando seletor: {}", selector);
                         // Aguardar que o popup/overlay fique invisivel apos clicar
-                        waitForInvisible(locator);
+                        try {
+                            waitForInvisible(locator);
+                        } catch (Exception e) {
+                            // Ignorar se nao conseguir aguardar invisibilidade
+                            logger.trace("Elemento pode ja ter sido removido: {}", e.getMessage());
+                        }
                     }
                 } catch (Exception e) {
-                    // Ignorar erros - tentativa silenciosa
                     logger.trace("Nao foi possivel fechar com seletor {}: {}", selector, e.getMessage());
                 }
             }
