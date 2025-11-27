@@ -470,4 +470,35 @@ public final class WaitUtils {
             return false;
         }
     }
+
+    /**
+     * Aguarda elemento estar clicavel (visivel e habilitado).
+     *
+     * @param locator Localizador do elemento
+     * @return WebElement clicavel
+     */
+    public static WebElement waitForClickable(By locator) {
+        logger.debug("Aguardando elemento clicavel: {}", locator);
+        try {
+            return getDefaultWait().until(ExpectedConditions.elementToBeClickable(locator));
+        } catch (TimeoutException e) {
+            throw new WaitTimeoutException("Elemento nao ficou clicavel: " + locator, e);
+        }
+    }
+
+    /**
+     * Aguarda elemento estar clicavel com timeout customizado.
+     *
+     * @param locator        Localizador do elemento
+     * @param timeoutSeconds Timeout em segundos
+     * @return WebElement clicavel
+     */
+    public static WebElement waitForClickable(By locator, int timeoutSeconds) {
+        logger.debug("Aguardando elemento clicavel ({}s): {}", timeoutSeconds, locator);
+        try {
+            return getWait(timeoutSeconds).until(ExpectedConditions.elementToBeClickable(locator));
+        } catch (TimeoutException e) {
+            throw new WaitTimeoutException("Elemento nao ficou clicavel apos " + timeoutSeconds + "s: " + locator, e);
+        }
+    }
 }

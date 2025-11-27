@@ -176,11 +176,48 @@ public class SearchResultsPage extends BasePage {
     @Step("Clicar no primeiro produto")
     public ProductDetailPage clickFirstProduct() {
         logger.info("Clicando no primeiro produto");
+        dismissPopupsIfPresent(); // Fechar popups antes de clicar
+
+        // Aguardar produtos estarem presentes
+        waitForVisible(PRODUCT_LINKS);
         List<WebElement> products = findProductElements();
+
         if (!products.isEmpty()) {
             WebElement firstProduct = products.get(0);
+
+            // Scroll para o elemento estar visivel
             scrollToElement(firstProduct);
-            firstProduct.click();
+
+            // Aguardar que o elemento esteja clicavel usando FluentWait
+            // Isso garante que overlays/popups nao estao mais interceptando
+            try {
+                org.openqa.selenium.support.ui.FluentWait<org.openqa.selenium.WebDriver> fluentWait =
+                    new org.openqa.selenium.support.ui.FluentWait<>(driver)
+                        .withTimeout(java.time.Duration.ofSeconds(10))
+                        .pollingEvery(java.time.Duration.ofMillis(200))
+                        .ignoring(org.openqa.selenium.ElementClickInterceptedException.class)
+                        .ignoring(org.openqa.selenium.StaleElementReferenceException.class);
+
+                fluentWait.until(d -> {
+                    try {
+                        // Re-localizar elemento para evitar StaleElementReferenceException
+                        List<WebElement> currentProducts = findProductElements();
+                        if (!currentProducts.isEmpty()) {
+                            currentProducts.get(0).click();
+                            return true;
+                        }
+                        return false;
+                    } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+                        dismissPopupsIfPresent(); // Continuar tentando fechar popups
+                        return false; // FluentWait vai tentar novamente
+                    }
+                });
+            } catch (org.openqa.selenium.TimeoutException e) {
+                logger.warn("Click interceptado apos timeout, tentando com JavaScript");
+                // Fallback: usar JavaScript click
+                ((org.openqa.selenium.JavascriptExecutor) driver)
+                    .executeScript("arguments[0].click();", firstProduct);
+            }
         } else {
             throw new RuntimeException("Nenhum produto encontrado para clicar");
         }

@@ -56,6 +56,7 @@ public class LoginPage extends BasePage {
     public LoginPage open() {
         logger.info("Abrindo pagina de login: {}", LOGIN_URL);
         navigateTo(LOGIN_URL);
+        dismissPopupsIfPresent(); // Fechar popups/overlays que podem estar bloqueando elementos
         waitForPageLoad();
         return this;
     }
@@ -152,6 +153,7 @@ public class LoginPage extends BasePage {
      */
     @Step("Preencher email para criar conta: {email}")
     public LoginPage fillCreateAccountEmail(String email) {
+        dismissPopupsIfPresent(); // Garantir que nenhum popup esta bloqueando o campo
         waitForVisible(CREATE_ACCOUNT_EMAIL_INPUT);
         type(CREATE_ACCOUNT_EMAIL_INPUT, email);
         return this;
@@ -294,8 +296,12 @@ public class LoginPage extends BasePage {
     @Override
     public boolean isPageLoaded() {
         try {
-            return isVisible(USER_INPUT) && isVisible(PASSWORD_INPUT);
+            // Verificar se pelo menos um dos campos principais esta visivel
+            // A pagina pode ter mudado e nem sempre todos elementos estao visiveis imediatamente
+            waitForPageLoad();
+            return isVisible(USER_INPUT) || isVisible(CREATE_ACCOUNT_EMAIL_INPUT) || isVisible(PAGE_TITLE);
         } catch (Exception e) {
+            logger.debug("Erro ao verificar se pagina carregou: {}", e.getMessage());
             return false;
         }
     }

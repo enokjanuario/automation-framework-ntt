@@ -228,6 +228,45 @@ public abstract class BasePage {
     }
 
     /**
+     * Tenta fechar popups e overlays comuns que podem interferir nos testes.
+     * Tentativa silenciosa - nao gera erro se nao encontrar elementos.
+     */
+    @Step("Fechar popups e overlays")
+    protected void dismissPopupsIfPresent() {
+        try {
+            // Lista de seletores comuns para botoes de fechar popups/overlays
+            String[] closeSelectors = {
+                    "[class*='close']",
+                    "[class*='Close']",
+                    "[class*='dismiss']",
+                    "[aria-label*='close' i]",
+                    "[aria-label*='fechar' i]",
+                    "button[class*='modal'] [class*='close']",
+                    ".modal-close",
+                    ".popup-close",
+                    ".overlay-close"
+            };
+
+            for (String selector : closeSelectors) {
+                try {
+                    By locator = By.cssSelector(selector);
+                    if (isPresent(locator) && isVisible(locator)) {
+                        click(locator);
+                        logger.debug("Fechado popup/overlay usando seletor: {}", selector);
+                        // Aguardar que o popup/overlay fique invisivel apos clicar
+                        waitForInvisible(locator);
+                    }
+                } catch (Exception e) {
+                    // Ignorar erros - tentativa silenciosa
+                    logger.trace("Nao foi possivel fechar com seletor {}: {}", selector, e.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            logger.debug("Erro ao tentar fechar popups: {}", e.getMessage());
+        }
+    }
+
+    /**
      * Verifica se a pagina esta carregada corretamente.
      *
      * @return true se pagina carregada
