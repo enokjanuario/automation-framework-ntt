@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Country Response Schema",
+  "description": "Schema for RESTCountries API response",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["name", "cca2", "cca3", "region"],
+    "properties": {
+      "name": {
+        "type": "object",
+        "required": ["common", "official"],
+        "properties": {
+          "common": {
+            "type": "string",
+            "minLength": 1
+          },
+          "official": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nativeName": {
+            "type": "object"
+          }
+        }
+      },
+      "tld": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "cca2": {
+        "type": "string",
+        "pattern": "^[A-Z]{2}$"
+      },
+      "cca3": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "cioc": {
+        "type": "string"
+      },
+      "independent": {
+        "type": "boolean"
+      },
+      "status": {
+        "type": "string"
+      },
+      "unMember": {
+        "type": "boolean"
+      },
+      "currencies": {
+        "type": "object"
+      },
+      "capital": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "region": {
+        "type": "string"
+      },
+      "subregion": {
+        "type": "string"
+      },
+      "languages": {
+        "type": "object"
+      },
+      "latlng": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      },
+      "landlocked": {
+        "type": "boolean"
+      },
+      "borders": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "area": {
+        "type": "number"
+      },
+      "population": {
+        "type": "integer"
+      },
+      "timezones": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "continents": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "flags": {
+        "type": "object",
+        "properties": {
+          "png": {
+            "type": "string",
+            "format": "uri"
+          },
+          "svg": {
+            "type": "string",
+            "format": "uri"
+          },
+          "alt": {
+            "type": "string"
+          }
+        }
+      },
+      "coatOfArms": {
+        "type": "object"
+      },
+      "startOfWeek": {
+        "type": "string"
+      },
+      "capitalInfo": {
+        "type": "object"
+      }
+    }
+  }
+}
